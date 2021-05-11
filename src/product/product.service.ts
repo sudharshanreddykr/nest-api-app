@@ -49,12 +49,12 @@ export class ProductService {
       .then((d) => ({ totalItems: d[1], data: d[0] }));
   }
 
-  findOne(id: number) {
-    return this.productRepository.findOne(id).then((data) => {
-      if (!data) throw new NotFoundException(); //throw new HttpException({}, 204);
-      return data;
-    });
-  }
+findOne(id: number) {
+return this.productRepository.findOne(id).then((data) => {
+if (!data) throw new NotFoundException(); //throw new HttpException({}, 204);
+return data;
+});
+}
 
   update(id: number, updateProductDto: UpdateProductDto) {
     return this.productRepository.update(

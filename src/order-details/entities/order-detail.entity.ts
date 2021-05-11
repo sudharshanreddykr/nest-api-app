@@ -1,32 +1,29 @@
-
-import { type } from 'node:os';
+import { UserEntity } from './../../auth/entities/user.entity';
 import { Order } from 'src/order/entities/order.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Product } from 'src/product/entities/product.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 
 @Entity({ name: 'orderdetails' })
 export class OrderDetail {
     @PrimaryGeneratedColumn()
-    orderId: number;
+    orderDetailId: number;
 
-    @Column({ default: '0' })
-    productId: number;
-
-    @Column({ default: '10' })
+    @Column({type: "integer"})
     quantity: number;
 
-    @Column({ type: "datetime", default: () => 'CURRENT_TIMESTAMP' })
-    orderDate: Date;
+    @Column( { type: 'decimal', precision: 10 } )
+    amount: number
 
-    @Column({ type: 'datetime' })
-    orderShippingDate: number;
+    @ManyToOne( () => Product, ( product ) => product.productId )
+    @JoinColumn( { name: 'productId' } )
+    productId: Product;
+  
+   @ManyToOne( () => Order, ( order ) => order.orderId )
+    @JoinColumn({name: 'orderId'})
+    orderId: Order;
 
-    @Column({ default: 10, type: 'decimal', precision: 2 })
-    totalAmount: number;
-
-    @Column({ default: 'pending' })
-    orderStatus: string;
-
-    @OneToMany(() => Order, (order) => order.orderId)
-    order: Order[];
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
+    @JoinColumn({ name: 'userId' })
+    userId: UserEntity;
 
 }

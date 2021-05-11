@@ -4,12 +4,15 @@ export class CreateOrderDto {
     amount: number;
 
     @ApiProperty()
-    SDate: string;
+    shipDate: string;
 
     @ApiProperty()
-    user: string
+        status?: string
 
     @ApiProperty()
-    product: number
+    userId: string
+
+    @ApiProperty()
+    productId: number
 }
 

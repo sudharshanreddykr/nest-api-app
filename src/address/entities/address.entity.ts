@@ -24,7 +24,7 @@ export class Address {
   @Column()
   state: string;
 
-  @Column({ type: 'integer' })
+  @Column({precision: 6})
   pincode: number;
 
   @Column({ type: 'datetime' })

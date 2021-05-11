@@ -17,8 +17,8 @@ import { OrderDetailsModule } from './order-details/order-details.module';
     AuthModule,
     AddressModule,
     OrderModule,
-    PaymentModule,
     OrderDetailsModule,
+    PaymentModule,
 
   ],
   controllers: [

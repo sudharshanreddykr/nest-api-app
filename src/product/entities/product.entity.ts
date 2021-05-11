@@ -1,5 +1,6 @@
 import { type } from 'node:os';
 import { Order } from 'src/order/entities/order.entity';
+import { Payment } from 'src/payment/entities/payment.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity({ name: 'products' })
@@ -22,7 +23,10 @@ export class Product {
   @Column({ default: 10 })
   productStock: number;
 
-  @OneToMany(() => Order, (order) => order.orderId)
-  order: Order[];
+  @OneToMany(() => Order, (order) => order.productId)
+  orderId: Order[]
+
+  // @OneToMany( () => payment, ( payment ) => payment.productId )
+  // paymentId:Payment[]
 
 }

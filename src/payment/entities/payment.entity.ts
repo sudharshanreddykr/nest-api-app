@@ -1,13 +1,15 @@
 import { type } from 'node:os';
 import { Order } from 'src/order/entities/order.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
+import { Product } from 'src/product/entities/product.entity';
+import { UserEntity } from 'src/auth/entities/user.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 
-@Entity({ name: 'payment' })
+@Entity( { name: 'payment' } )
 export class Payment {
     @PrimaryGeneratedColumn()
     paymentId: number;
 
-    @Column({ nullable: false })
+    @Column({default: 1000})
     paymentAmount: number;
 
     @Column({ type: "datetime", default: () => 'CURRENT_TIMESTAMP' })
@@ -21,6 +23,13 @@ export class Payment {
 
     @ManyToOne( () => Order, ( order ) => order.orderId )
         @JoinColumn({name: 'orderId'})
-    order: Order[];
+    orderId: Order;
 
+    @ManyToOne( () => Product, ( product ) => product.productId )
+    @JoinColumn( { name: 'productId' } )
+    productId: Product;
+
+    @ManyToOne( () => UserEntity, ( userEntity ) => userEntity.userId )
+    @JoinColumn( { name: 'userId' } )
+    userId: UserEntity;
 }

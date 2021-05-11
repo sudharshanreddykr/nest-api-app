@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/auth/user/user.service';
-import { OrderService } from 'src/order/order.service';
 import { Repository } from 'typeorm';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
@@ -12,7 +11,7 @@ export class AddressService {
   constructor(
     @InjectRepository(Address) private addressRepository: Repository<Address>,
     private userService: UserService,
-  ) { }
+  ) {}
   async create(uid: string, createAddressDto: CreateAddressDto) {
     const user = await this.userService.findById(uid);
     const { city, line1, line2, pincode, state } = createAddressDto;
@@ -27,8 +26,9 @@ export class AddressService {
     });
   }
 
-  findAll() {
-    return this.addressRepository.find();
+  async findAll(userId:any) {
+    const user = await this.userService.findById(userId)
+    return this.addressRepository.find({where:{user}});
   }
 
   async findOne(id: number) {

@@ -19,6 +19,6 @@ export class CreateAddressDto {
   state: string;
 
   @ApiProperty()
-  @IsNumber()
+//  @IsNumber() 
   pincode: number;
 }

@@ -7,68 +7,54 @@ import { Order } from './entities/order.entity';
 import { Like, Repository } from 'typeorm';
 import { UserService } from 'src/auth/user/user.service';
 
-import { request } from 'express';
-
-
-
-
 @Injectable()
 export class OrderService {
 
   constructor(
     @InjectRepository(Order) private orderRepository: Repository<Order>,
     private userService: UserService,
-    private ProductService: ProductService,
-    
+    private productService: ProductService,
   ) { }
-
-
-  async create(id: string,pId: number ,createOrderDto: CreateOrderDto) {
+  async create(userId: string,productId: number ,createOrderDto: CreateOrderDto) {
     try {
-      const user = await this.userService.findById( id );
-      const product1 = await this.ProductService.findOne( pId );
-      return this.orderRepository.save({
-        orderAmount: createOrderDto.amount,
-        orderShippingDate: createOrderDto.SDate,
-        user,
-        product1,
-        
+      const user = await this.userService.findById( userId );
+      const product = await this.productService.findOne( productId );
+      const { amount, shipDate, status } = createOrderDto;
+      return this.orderRepository.save( {
+        orderAmount: amount,
+        orderShippingDate: shipDate,
+        orderStatus: status,
+        userId: user,
+        productId:product  
       });
     } catch (err) {
       console.log(err);
     }
   }
-
-  findAll() {
-    return this.orderRepository.find();
+  async findAll ( userId: string ) {
+    const user = await this.userService.findById(userId)
+    return this.orderRepository.find({where:{userId:user}});
   }
 
-  findOne(id: number) {
-    return
-    this.orderRepository.findOne(id)
-      .then((data) => {
-        console.log(data);
-        if (!data) throw new NotFoundException();
-        return data;
-      });
+ findOne(id: number) {
+    return this.orderRepository.findOne(id).then((data) => {
+      if (!data) throw new NotFoundException(); //throw new HttpException({}, 204);
+      return data;
+    });
   }
-
 
   async update(id: number, updateOrderDto: UpdateOrderDto) {
-
     return this.orderRepository
       .update(id, {
         orderAmount: updateOrderDto.amount,
-        orderShippingDate: updateOrderDto.SDate,
-        
-        
-        
+        orderShippingDate: updateOrderDto.shipDate,
+        orderStatus: updateOrderDto.status,  
       })
-      .then((data) => {
+      .then( ( data ) => {
+        if ( !data ) throw new NotFoundException();
         return data;
       });
   }
-
   remove(id: number) {
     return this.orderRepository.delete({ orderId: id });
   }
