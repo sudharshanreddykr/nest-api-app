@@ -34,8 +34,9 @@ export class PaymentService {
     })
   }
 
-  findAll() {
-    return this.paymentRepository.find();
+  async findAll ( userId: string ) {
+    const user = await this.userService.findById(userId)
+    return this.paymentRepository.find({where: {userId: user}});
   }
 
   async findOne(id: number) {

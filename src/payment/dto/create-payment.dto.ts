@@ -9,7 +9,7 @@ export class CreatePaymentDto {
     status ?: string;
         
     @ApiProperty()
-    date: string;
+    date: Date;
 
     @ApiProperty()
     userId: string;

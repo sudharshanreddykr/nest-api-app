@@ -9,7 +9,7 @@ export class Payment {
     @PrimaryGeneratedColumn()
     paymentId: number;
 
-    @Column({default: 1000})
+    @Column({default: "0", type: 'decimal',precision: 10})
     paymentAmount: number;
 
     @Column({ type: "datetime", default: () => 'CURRENT_TIMESTAMP' })
