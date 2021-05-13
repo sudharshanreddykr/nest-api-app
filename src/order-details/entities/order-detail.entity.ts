@@ -22,7 +22,7 @@ export class OrderDetail {
     @JoinColumn({name: 'orderId'})
     orderId: Order;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
+    @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
     @JoinColumn({ name: 'userId' })
     userId: UserEntity;
 
