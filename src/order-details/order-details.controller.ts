@@ -1,27 +1,28 @@
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards } from '@nestjs/common';
 import { OrderDetailsService } from './order-details.service';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
 import { UpdateOrderDetailDto } from './dto/update-order-detail.dto';
+import { ApiNotFoundResponse} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
 
-@Controller( 'order-details' )
-  @UseGuards(JwtAuthGuard)
+@Controller('order-details')
+@UseGuards(JwtAuthGuard)
 export class OrderDetailsController {
   constructor(private readonly orderDetailsService: OrderDetailsService) {}
 
-@Post()
+  @Post()
   create(@Request() req:any,@Body() createOrderDetailDto: CreateOrderDetailDto) {
-    return this.orderDetailsService.create(req.user.userId,req.orderId,req.productId,createOrderDetailDto);
+    return this.orderDetailsService.create(req.user.userId,req.body.productId,req.body.orderId,createOrderDetailDto);
   }
 
   @Get()
-  findAll(@Request() req: any) {
+  findAll(@Request() req:any) {
     return this.orderDetailsService.findAll(req.user.userId);
   }
 
   @Get(':id')
-  findOne(@Request() req: any ,@Param('id') id: string) {
-    return this.orderDetailsService.findOne(req.user.userId, +id);
+  findOne(@Param('id') id: string) {
+    return this.orderDetailsService.findOne(+id);
   }
 
   @Patch(':id')

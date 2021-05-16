@@ -1,26 +1,28 @@
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards } from '@nestjs/common';
+import { ApiNotFoundResponse} from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 
-@Controller( 'payment' )
-  @UseGuards(JwtAuthGuard)
+@Controller('payment')
+@UseGuards(JwtAuthGuard)
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post()
-  create(@Request() req:any, @Body() createPaymentDto: CreatePaymentDto) {
-    return this.paymentService.create(req.user.userId ,req.body.orderId,req.body.productId,createPaymentDto);
+  create(@Request() req:any,@Body() createPaymentDto: CreatePaymentDto) {
+    return this.paymentService.create(req.user.userId,req.body.productId,req.body.orderId,createPaymentDto);
   }
 
   @Get()
   findAll(@Request() req:any) {
-    return this.paymentService.findAll(req.user.userId);
+    return this.paymentService.findAll(req.user.usrId);
   }
 
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Request() req:any,@Param('id') id: string) {
     return this.paymentService.findOne(+id);
   }
 

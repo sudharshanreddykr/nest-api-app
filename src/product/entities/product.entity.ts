@@ -1,4 +1,5 @@
-import { type } from 'node:os';
+import { OrderDetail } from 'src/order-details/entities/order-detail.entity';
+
 import { Order } from 'src/order/entities/order.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
@@ -20,13 +21,16 @@ export class Product {
   @Column({ default: 0, type: 'decimal' })
   productSalePrice: number;
 
+
   @Column({ default: 10 })
   productStock: number;
 
-  @OneToMany(() => Order, (order) => order.productId)
-  orderId: Order[]
+  @OneToMany(()=>Payment,(payment)=>payment.productId)
+  paymentId:Payment[]
 
-  // @OneToMany( () => payment, ( payment ) => payment.productId )
-  // paymentId:Payment[]
+  @OneToMany(()=>Order,(order)=>order.productId)
+  orderId:Order[]
 
+  @OneToMany(()=>OrderDetail,(orderDetail)=>orderDetail.productId)
+  orderDetailId:OrderDetail[]
 }

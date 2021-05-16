@@ -1,38 +1,39 @@
-import { OrderDetail } from 'src/order-details/entities/order-detail.entity';
-import { UserEntity } from 'src/auth/entities/user.entity';
-import { Product } from 'src/product/entities/product.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn , OneToMany} from "typeorm";
-import { Payment } from 'src/payment/entities/payment.entity';
+import { Product } from './../../product/entities/product.entity';
+import { UserEntity } from "src/auth/entities/user.entity";
+import { OrderDetail } from "src/order-details/entities/order-detail.entity";
+import { Payment } from "src/payment/entities/payment.entity";
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({ name: 'order' })
+@Entity({name:'order'})
 export class Order {
-    @PrimaryGeneratedColumn()
-    orderId: number;
 
-    @Column({ type:"decimal", precision:10 })
-    orderAmount: number;
+    @PrimaryGeneratedColumn({type:'integer'})
+    orderId:number
 
-    @Column({ type: "datetime", default: () => 'CURRENT_TIMESTAMP' })
-    orderDate: Date;
+    @Column({type:'decimal',precision:10})
+    orderAmount:number
 
-    @Column({ type: 'date', nullable: true })
-    orderShippingDate: string;
+    @Column({type:'datetime',default:()=>'CURRENT_TIMESTAMP'})
+    orderDate:Date
 
-    @Column({ default: 'pending' })
-    orderStatus: string;
+    @Column({type:'date',nullable:true})
+    shippingDate:string;
 
-    @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
-    @JoinColumn({ name: 'userId' })
-    userId: UserEntity;
+    @Column({default:'pending'})
+    orderStatus:string;
 
+    @ManyToOne(()=>UserEntity,(userEntity)=>userEntity.userId)
+    @JoinColumn({name:'userId'})
+    userId:UserEntity;
 
-    @ManyToOne(() => Product, (product) => product.productId)
-     @JoinColumn({ name: 'productId' })
-    productId: Product
+    @ManyToOne(()=>Product,(product)=>product.productId)
+    @JoinColumn({name:'productId'})
+    //@JoinTable()
+    productId:Product
+
+    @OneToMany(()=>OrderDetail,(orderDetail)=>orderDetail.orderId)
+    orderDetailId:OrderDetail[];
 
     @OneToMany(()=>Payment,(payment)=>payment.orderId)
     paymentId:Payment[];
-
-  @OneToMany(()=>OrderDetail,(orderDetail)=>orderDetail.orderId)
-    orderDetailId:OrderDetail[];
 }

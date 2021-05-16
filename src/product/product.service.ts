@@ -1,24 +1,22 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Product } from './entities/product.entity';
-import { Like, Repository } from 'typeorm';
-
+import { HttpException, Injectable, NotFoundException } from "@nestjs/common";
+import { CreateProductDto } from "./dto/create-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Product } from "./entities/product.entity";
+import { Like, Repository } from "typeorm";
 import {
   uniqueNamesGenerator,
   adjectives,
   colors,
   names,
   languages,
-} from 'unique-names-generator';
+} from "unique-names-generator";
 
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectRepository(Product) private productRepository: Repository<Product>,
-  ) { }
-
+    @InjectRepository(Product) private productRepository: Repository<Product>
+  ) {}
   create(createProductDto: CreateProductDto) {
     return this.productRepository.save({
       productName: createProductDto.name,
@@ -26,11 +24,11 @@ export class ProductService {
     });
   }
 
-  findAll(page: number, size: number, searchByTerm: string) {
+  findAll(page: number, size: number, serachByTerm: string) {
     return this.productRepository
-      .findAndCount( {
+      .findAndCount({
         where: {
-          productName: Like(`%${searchByTerm}%`),
+          productName: Like(`%${serachByTerm}%`),
         },
         take: size,
         skip: (page - 1) * size,
@@ -47,17 +45,17 @@ export class ProductService {
     return this.productRepository
       .findAndCount({
         where: { productName: Like(`%${query}%`) },
-        order: { productId: 'ASC' },
+        order: { productId: "ASC" },
       })
       .then((d) => ({ totalItems: d[1], data: d[0] }));
   }
 
-findOne(id: number) {
-return this.productRepository.findOne(id).then((data) => {
-if (!data) throw new NotFoundException(); //throw new HttpException({}, 204);
-return data;
-});
-}
+  findOne(id: number) {
+    return this.productRepository.findOne(id).then((data) => {
+      if (!data) throw new NotFoundException(); //throw new HttpException({}, 204);
+      return data;
+    });
+  }
 
   update(id: number, updateProductDto: UpdateProductDto) {
     return this.productRepository.update(
@@ -65,7 +63,7 @@ return data;
       {
         productName: updateProductDto.name,
         productImage: updateProductDto.image,
-      },
+      }
     );
   }
 
@@ -92,10 +90,10 @@ return data;
         productId: 1000 + i + 1,
         productName: uniqueNamesGenerator({
           dictionaries: [adjectives, colors, names],
-          separator: ' ',
+          separator: " ",
         }),
         productImage: `https://picsum.photos/400?image=${Math.floor(
-          Math.random() * 1000,
+          Math.random() * 1000
         )}`,
         productStock: randomStock,
         productPrice: randomPrice.toFixed(2),
