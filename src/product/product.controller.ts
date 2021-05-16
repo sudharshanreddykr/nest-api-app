@@ -32,8 +32,10 @@ export class ProductController {
   }
 
   @Get()
-  findAll(@Query('page') page: number = 1, @Query('size') size: number = 20) {
-    return this.productService.findAll(page, size);
+  findAll ( @Query( 'page' ) page: number = 1, @Query( 'size' ) size: number = 20,
+  @Query("searchByTerm") searchByTerm: string
+  ) {
+    return this.productService.findAll(page, size, searchByTerm);
   }
 
   @Get('search')

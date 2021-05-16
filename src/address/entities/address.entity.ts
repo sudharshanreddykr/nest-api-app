@@ -1,6 +1,5 @@
 import { UserEntity } from 'src/auth/entities/user.entity';
 import {
-  BeforeInsert,
   Column,
   Entity,
   ManyToOne,

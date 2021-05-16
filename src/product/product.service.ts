@@ -26,9 +26,12 @@ export class ProductService {
     });
   }
 
-  findAll(page: number, size: number) {
+  findAll(page: number, size: number, searchByTerm: string) {
     return this.productRepository
-      .findAndCount({
+      .findAndCount( {
+        where: {
+          productName: Like(`%${searchByTerm}%`),
+        },
         take: size,
         skip: (page - 1) * size,
       })

@@ -17,7 +17,6 @@ export class OrderDetailsService {
     private productService: ProductService,
     private orderService: OrderService,
     
-    // private productService: ProductService,
   ) { }
 
   async create (userId: string, orderId: number, productId: number, createOrderDetailDto: CreateOrderDetailDto ) {
