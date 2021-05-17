@@ -24,7 +24,7 @@ export class ProductService {
       productImage: createProductDto.image,
     });
   }
-  findAllNHTL(
+  findAll1(
     page: number,
     size: number,
     minPrice: number,
@@ -51,7 +51,7 @@ export class ProductService {
         totalPages: Math.ceil(res[1] / size),
       }));
   }
-  findAllNLTH(
+  findAll2(
     page: number,
     size: number,
     minPrice: number,
@@ -79,7 +79,7 @@ export class ProductService {
       }));
   }
 
-  findAllPHTL(
+  findAll3(
     page: number,
     size: number,
     minPrice: number,
@@ -107,7 +107,7 @@ export class ProductService {
       }));
   }
 
-  findAllPLTH(
+  findAll4(
     page: number,
     size: number,
     minPrice: number,

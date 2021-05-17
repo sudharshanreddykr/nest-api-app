@@ -41,39 +41,41 @@ export class ProductController {
     @Query("sortByName") sortByName: string,
     @Query("sortByPrice") sortByPrice: string
   ) {
-    switch (true) {
-      case sortByName == "productSalePrice" && sortByPrice == "ASC":
-        return this.productService.findAllPLTH(
-          page,
-          size,
-          minPrice,
-          maxPrice,
-          searchByTerm,
-          sortByName,
-          sortByPrice
-        );
-      case sortByName == "productSalePrice" && sortByPrice == "DESC":
-        return this.productService.findAllPHTL(
-          page,
-          size,
-          minPrice,
-          maxPrice,
-          searchByTerm,
-          sortByName,
-          sortByPrice
-        );
-      case sortByName == "productName" && sortByPrice == "ASC":
-        return this.productService.findAllNLTH(
-          page,
-          size,
-          minPrice,
-          maxPrice,
-          searchByTerm,
-          sortByName,
-          sortByPrice
-        );
-      case sortByName == "productName" && sortByPrice == "ASC":
-        return this.productService.findAllNLTH(
+     
+    if ( sortByName == "productSalePrice" && sortByPrice == "ASC" ) {
+      return this.productService.findAll1(
+        page,
+        size,
+        minPrice,
+        maxPrice,
+        searchByTerm,
+        sortByName,
+        sortByPrice
+       ) }
+    if ( sortByName == "productSalePrice" && sortByPrice == "DESC" ) {
+      return this.productService.findAll2(
+        page,
+        size,
+        minPrice,
+        maxPrice,
+        searchByTerm,
+        sortByName,
+        sortByPrice
+      )
+    };
+    if ( sortByName == "productName" && sortByPrice == "ASC" ) {
+      return this.productService.findAll3(
+        page,
+        size,
+        minPrice,
+        maxPrice,
+        searchByTerm,
+        sortByName,
+        sortByPrice
+      )
+    };
+      if (sortByName == "productName" && sortByPrice == "ASC") {
+        return this.productService.findAll4(
           page,
           size,
           minPrice,
