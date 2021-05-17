@@ -9,18 +9,19 @@ export class UserService {
   // CRUD BEHAVIOR OF USER ENTITY
   constructor(
     @InjectRepository(UserEntity) private userRepo: Repository<UserEntity>,
-  ) {}
+  ) { }
 
   async findByEmail(email: string) {
     return this.userRepo.findOne({ where: { userEmail: email } });
   }
 
-   async findById(id: string) {
+  async findById(id: string) {
     return this.userRepo.findOne({
       where: { userId: id },
       relations: ["address"],
     });
   }
+
 
   async create(userDto: CreateUserDto) {
     const { email, password, name } = userDto;

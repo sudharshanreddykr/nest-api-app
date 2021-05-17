@@ -1,34 +1,39 @@
-import { UserEntity } from "src/auth/entities/user.entity";
-import { Order } from "src/order/entities/order.entity";
-import { Product } from "src/product/entities/product.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { type } from 'node:os';
+import { UserEntity } from 'src/auth/entities/user.entity';
+import { Order } from 'src/order/entities/order.entity';
+import { Product } from 'src/product/entities/product.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToMany, ManyToOne } from "typeorm";
 
-@Entity({name:'orderdetails'})
+@Entity({ name: 'orderdetails' })
 export class OrderDetail {
-
     @PrimaryGeneratedColumn()
-    orderDetailId:number 
+    orderDetailsId: number;
 
-    @Column({type:'decimal',precision:10})
-    orderAmount:number
+    @Column({ nullable: false })
+    quantity: number;
 
-    @Column({type:'integer'})
-    orderQty:number
+    @Column({ type: "datetime", default: () => 'CURRENT_TIMESTAMP' })
+    orderDate: Date;
 
-    // @Column({type:'integer',default:0})
-    // orderId:number;
+    // @Column({ type: 'datetime' })
+    // orderShippingDate: Date;
 
-    @ManyToOne(()=>Order,(order)=>order.orderId)
-    @JoinColumn({name:'orderId'})
-    orderId:Order;
+    @Column({ default: 10, type: 'decimal', precision: 2 })
+    totalAmount: number;
 
-    @ManyToOne(()=>Product,(product)=>product.productId)
-    @JoinColumn({name:'productId'})
-    productId:Product;
+    @Column({ default: 'pending' })
+    orderStatus: string;
 
-    @ManyToOne(()=>UserEntity,(userEntity)=>userEntity.userId)
-    @JoinColumn({name:'userId'})
-    userId:UserEntity
-    
 
+    @ManyToOne(() => UserEntity, (user) => user.userId)
+    @JoinColumn({ name: "userId" })
+    userId: UserEntity;
+
+    @ManyToOne(() => Order, (order) => order.orderId)
+    @JoinColumn({ name: "orderId" })
+    orderId: Order;
+
+    @ManyToOne(() => Product, (product) => product.productId)
+    @JoinColumn({ name: "productId" })
+    productId: Product;
 }

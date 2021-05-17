@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import {
   ApiTags,
-  
   ApiCreatedResponse,
   ApiBadRequestResponse,
   ApiOkResponse,
@@ -26,7 +25,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-  ) {}
+  ) { }
 
   @Post('login')
   @HttpCode(200)

@@ -20,4 +20,7 @@ export class CreateAddressDto {
 
   @ApiProperty()
   pincode: number;
+
+  @ApiProperty()
+  userId: number;
 }

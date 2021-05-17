@@ -1,63 +1,77 @@
-import { UserService } from 'src/auth/user/user.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order } from 'src/order/entities/order.entity';
-import { Repository } from 'typeorm';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto'; 
+import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { Payment } from './entities/payment.entity';
-import { ProductService } from 'src/product/product.service';
+import { Like, Repository } from 'typeorm';
 import { OrderService } from 'src/order/order.service';
+import { UserService } from 'src/auth/user/user.service';
+import { ProductService } from 'src/product/product.service';
+
 
 @Injectable()
 export class PaymentService {
-constructor(
-  @InjectRepository(Payment) private paymentRepository:Repository<Payment>,
-  private userService:UserService,private productService:ProductService,private orderService:OrderService
-){
 
-}
-  async create(userId:string,productId:number,orderId:number,createPaymentDto: CreatePaymentDto) {
-    const user = await this.userService.findById(userId)
-    const product = await this.productService.findOne(productId)
-    const order = await this.orderService.findOne(orderId)
+  constructor(
+    @InjectRepository(Payment) private paymentRepository: Repository<Payment>,
+    private userService: UserService,
+    private orderService: OrderService,
+    private productService: ProductService
+  ) { }
 
-    const{Amount,Date,status}=createPaymentDto;
-    return this.paymentRepository.save({
-      payAmount:Amount,
-      paymentDate:Date,
-      paymentStatus:status,
-      userId:user,
-      productId:product,
-      orderId:order
-      
-    });
+  async create(userId: string, orderId: number, productId: number, createPaymentDto: CreatePaymentDto) {
+    try {
+      const user = await this.userService.findById(userId)
+      const order = await this.orderService.findOne(orderId)
+      const product = await this.productService.findOne(productId)
+      console.log("payment order", order)
+      const { amount, mode } = createPaymentDto;
+      return this.paymentRepository.save({
+        paymentAmount: amount,
+        paymentMode: mode,
+        userId: user,
+        productId: product,
+        _orderId: order,
+        get orderId() {
+          return this._orderId;
+        },
+        set orderId(value) {
+          this._orderId = value;
+        },
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  async findAll(userId:string) {
-    const user = await this.userService.findById(userId)
-    return this.paymentRepository.find({where:{userId:user}});
+
+  async findAll(userId: string) {
+    try {
+      const user = await this.userService.findById(userId)
+      return this.paymentRepository.find({ where: { userId: user } });
+    } catch (err) {
+      console.log(err);
+    }
   }
+
 
   findOne(id: number) {
     return this.paymentRepository.findOne(id).then((data) => {
       if (!data) throw new NotFoundException(); //throw new HttpException({}, 204);
       return data;
-    });
+    }).catch(err => console.log(err))
   }
 
-  async update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentRepository.update({paymentId:id},{
-      payAmount:updatePaymentDto.Amount,
-      paymentDate:updatePaymentDto.Date,
-      paymentStatus:updatePaymentDto.status
-    }).then((data)=>{
-      if(!data) throw new NotFoundException();
-      return 
-    })
+
+  update(id: number, updatePaymentDto: UpdatePaymentDto) {
+    return this.paymentRepository.update(id,
+      {
+        paymentAmount: updatePaymentDto.amount,
+        paymentMode: updatePaymentDto.mode
+      });
   }
 
   remove(id: number) {
-    return this.paymentRepository.delete({paymentId:id});
+    return this.paymentRepository.delete(id);
   }
 }

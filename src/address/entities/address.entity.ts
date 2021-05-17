@@ -24,13 +24,13 @@ export class Address {
   @Column()
   state: string;
 
-  @Column({precision:6})
-  pincode: number;
+  @Column({ precision: 6 })
+  pincode?: number;
 
   @Column({ type: 'datetime' })
   createdAt: string;
 
-  // many addresses will be for one userentity
+  //many addresses will be for one userentity
   @ManyToOne((type) => UserEntity, (user) => user.userId)
-  user: UserEntity;
+  userId: UserEntity;
 }

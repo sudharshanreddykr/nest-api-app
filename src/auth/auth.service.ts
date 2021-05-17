@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
   // authentication related logic
   registerUser(userDto: CreateUserDto) {
     return this.userService.create(userDto);

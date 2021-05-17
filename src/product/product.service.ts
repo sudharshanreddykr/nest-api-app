@@ -3,7 +3,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "./entities/product.entity";
-import { Like, Repository } from "typeorm";
+import { Between,  Like,  Repository } from "typeorm";
 import {
   uniqueNamesGenerator,
   adjectives,
@@ -15,7 +15,8 @@ import {
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectRepository(Product) private productRepository: Repository<Product>
+    @InjectRepository(Product)
+    private productRepository: Repository<Product>
   ) {}
   create(createProductDto: CreateProductDto) {
     return this.productRepository.save({
@@ -23,13 +24,50 @@ export class ProductService {
       productImage: createProductDto.image,
     });
   }
-
-  findAll(page: number, size: number, serachByTerm: string) {
+  findAllNHTL(
+    page: number,
+    size: number,
+    minPrice: number,
+    maxPrice: number,
+    searchData: string,
+    sortName: string,
+    sortPrice: string
+  ) {
     return this.productRepository
       .findAndCount({
         where: {
-          productName: Like(`%${serachByTerm}%`),
+          productSalePrice: Between(minPrice, maxPrice),
+          productName: Like(`%${searchData}%`),
         },
+        order: { productName: "DESC" },
+
+        take: size,
+        skip: (page - 1) * size,
+      })
+      .then((res) => ({
+        totalItems: res[1],
+        data: res[0],
+        currentPage: page,
+        totalPages: Math.ceil(res[1] / size),
+      }));
+  }
+  findAllNLTH(
+    page: number,
+    size: number,
+    minPrice: number,
+    maxPrice: number,
+    searchData: string,
+    sortName: string,
+    sortPrice: string
+  ) {
+    return this.productRepository
+      .findAndCount({
+        where: {
+          productSalePrice: Between(minPrice, maxPrice),
+          productName: Like(`%${searchData}%`),
+        },
+        order: { productName: "ASC" },
+
         take: size,
         skip: (page - 1) * size,
       })
@@ -41,7 +79,91 @@ export class ProductService {
       }));
   }
 
-  fingByQuery(query: string) {
+  findAllPHTL(
+    page: number,
+    size: number,
+    minPrice: number,
+    maxPrice: number,
+    searchData: string,
+    sortName: string,
+    sortPrice: string
+  ) {
+    return this.productRepository
+      .findAndCount({
+        where: {
+          productSalePrice: Between(minPrice, maxPrice),
+          productName: Like(`%${searchData}%`),
+        },
+        order: { productSalePrice: "DESC" },
+
+        take: size,
+        skip: (page - 1) * size,
+      })
+      .then((res) => ({
+        totalItems: res[1],
+        data: res[0],
+        currentPage: page,
+        totalPages: Math.ceil(res[1] / size),
+      }));
+  }
+
+  findAllPLTH(
+    page: number,
+    size: number,
+    minPrice: number,
+    maxPrice: number,
+    searchData: string,
+    sortName: string,
+    sortPrice: string
+  ) {
+    return this.productRepository
+      .findAndCount({
+        where: {
+          productSalePrice: Between(minPrice, maxPrice),
+          productName: Like(`%${searchData}%`),
+        },
+        order: { productSalePrice: "ASC" },
+
+        take: size,
+        skip: (page - 1) * size,
+      })
+      .then((res) => ({
+        totalItems: res[1],
+        data: res[0],
+        currentPage: page,
+        totalPages: Math.ceil(res[1] / size),
+      }));
+  }
+
+  findAll(
+    page: number,
+    size: number,
+    minPrice: number,
+    maxPrice: number,
+    searchByTerm: string,
+    sortByName: string,
+    sortByPrice: string
+  ) {
+    return this.productRepository
+      .findAndCount({
+        where: {
+          productSalePrice: Between(minPrice, maxPrice),
+          productName: Like(`%${searchByTerm}%`),
+        },
+        // order: { sortBy: "ASC" },
+
+        take: size,
+        skip: (page - 1) * size,
+      })
+      .then((res) => ({
+        totalItems: res[1],
+        data: res[0],
+        currentPage: page,
+        totalPages: Math.ceil(res[1] / size),
+      }));
+  }
+
+  findByQuery(query: string) {
     return this.productRepository
       .findAndCount({
         where: { productName: Like(`%${query}%`) },

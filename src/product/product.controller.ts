@@ -12,10 +12,10 @@ import {
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
-import {ApiNotFoundResponse } from "@nestjs/swagger";
+import { ApiTags, ApiNotFoundResponse, ApiOkResponse } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/jwt.guard";
 
-
+@ApiTags("Product")
 @Controller("product")
 // @UseGuards(JwtAuthGuard) : apply the guard to all the routes
 export class ProductController {
@@ -35,17 +35,75 @@ export class ProductController {
   findAll(
     @Query("page") page: number = 1,
     @Query("size") size: number = 20,
-    @Query("serachByTerm") serachByTerm: string
+    @Query("minPrice") minPrice: number = 1,
+    @Query("maxPrice") maxPrice: number = 5000,
+    @Query("searchByTerm") searchByTerm: string,
+    @Query("sortByName") sortByName: string,
+    @Query("sortByPrice") sortByPrice: string
   ) {
-    return this.productService.findAll(page, size, serachByTerm);
-  }
+    switch (true) {
+      case sortByName == "productSalePrice" && sortByPrice == "ASC":
+        return this.productService.findAllPLTH(
+          page,
+          size,
+          minPrice,
+          maxPrice,
+          searchByTerm,
+          sortByName,
+          sortByPrice
+        );
+      case sortByName == "productSalePrice" && sortByPrice == "DESC":
+        return this.productService.findAllPHTL(
+          page,
+          size,
+          minPrice,
+          maxPrice,
+          searchByTerm,
+          sortByName,
+          sortByPrice
+        );
+      case sortByName == "productName" && sortByPrice == "ASC":
+        return this.productService.findAllNLTH(
+          page,
+          size,
+          minPrice,
+          maxPrice,
+          searchByTerm,
+          sortByName,
+          sortByPrice
+        );
+      case sortByName == "productName" && sortByPrice == "ASC":
+        return this.productService.findAllNLTH(
+          page,
+          size,
+          minPrice,
+          maxPrice,
+          searchByTerm,
+          sortByName,
+          sortByPrice
+        );
+    }
 
+    return this.productService.findAll(
+      page,
+      size,
+      minPrice,
+      maxPrice,
+      searchByTerm,
+      sortByName,
+      sortByPrice
+    );
+  }
 
   @Get("search")
   findByQuery(@Query("q") query: string) {
-    return this.productService.fingByQuery(query);
+    return this.productService.findByQuery(query);
   }
 
+  @ApiNotFoundResponse({
+    description: "No data is found for the specified ID",
+  })
+  @ApiOkResponse({ description: "Product Data found" })
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.productService.findOne(+id);

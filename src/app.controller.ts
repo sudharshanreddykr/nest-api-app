@@ -1,4 +1,3 @@
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import {
   Body,
   Controller,
@@ -8,12 +7,10 @@ import {
   Delete,
   Param,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
-  @UseGuards(JwtAuthGuard)
 export class AppController {
   // create an object of appservice class & inject in the appcontroller class
   constructor(private readonly appService: AppService) { }
@@ -45,4 +42,3 @@ export class AppController {
     return 'delete method';
   }
 }
-
