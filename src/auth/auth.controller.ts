@@ -36,7 +36,6 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(200)
-  @ApiOkResponse({ description: 'Login Successful' })
   @ApiBadRequestResponse({
     description: 'User does not exists or invalid login details',
   })
@@ -45,8 +44,6 @@ export class AuthController {
   }
 
   @Post('register')
-  @ApiCreatedResponse({ description: 'New user account created' })
-  @ApiBadRequestResponse({ description: 'User already exists or server error' })
   register(@Body() createUserDto: CreateUserDto) {
     return this.authService.registerUser(createUserDto);
   }

@@ -100,10 +100,6 @@ export class ProductController {
     return this.productService.findByQuery(query);
   }
 
-  @ApiNotFoundResponse({
-    description: "No data is found for the specified ID",
-  })
-  @ApiOkResponse({ description: "Product Data found" })
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.productService.findOne(+id);
