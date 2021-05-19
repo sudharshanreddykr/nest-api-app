@@ -42,7 +42,7 @@ export class OrderService {
   async findAll(userId: string,) {
     try {
       const user = await this.userService.findById(userId);
-      return this.orderRepository.find({ where: { userId: user } });
+      return this.orderRepository.find({ where: { userId: user }, relations: ["productId"], });
     } catch (err) {
       console.log(err)
     }
