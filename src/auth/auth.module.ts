@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import constants from './constants';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt.guard';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Global()
 @Module({
@@ -18,7 +19,10 @@ import { JwtAuthGuard } from './jwt.guard';
     JwtModule.register({
       signOptions: { expiresIn: 60 * constants.EXPIRATION_TIME },
       secret: constants.SECRET_KEY,
-    }),
+    } ),
+    // MulterModule.register( {
+    //   dest: "./upload/profileImage",
+    // })
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, JwtStrategy, JwtAuthGuard],

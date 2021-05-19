@@ -6,7 +6,6 @@ import { Payment } from './entities/payment.entity';
 import { Like, Repository } from 'typeorm';
 import { OrderService } from 'src/order/order.service';
 import { UserService } from 'src/auth/user/user.service';
-import { ProductService } from 'src/product/product.service';
 
 
 @Injectable()
@@ -16,28 +15,29 @@ export class PaymentService {
     @InjectRepository(Payment) private paymentRepository: Repository<Payment>,
     private userService: UserService,
     private orderService: OrderService,
-    private productService: ProductService
   ) { }
 
-  async create(userId: string, orderId: number, productId: number, createPaymentDto: CreatePaymentDto) {
+  async create(userId: string, orderId: number, createPaymentDto: CreatePaymentDto) {
     try {
       const user = await this.userService.findById(userId)
       const order = await this.orderService.findOne(orderId)
-      const product = await this.productService.findOne(productId)
       console.log("payment order", order)
-      const { amount, mode } = createPaymentDto;
+      const { Cname, cardNo, cvv
+         } = createPaymentDto;
       return this.paymentRepository.save({
-        paymentAmount: amount,
-        paymentMode: mode,
+        // cardName,
+       Cname,
+        cardNo,
+        cvv,
         userId: user,
-        productId: product,
         _orderId: order,
-        get orderId() {
+        get orderId () {
           return this._orderId;
         },
-        set orderId(value) {
+        set orderId ( value ) {
           this._orderId = value;
         },
+
       })
     } catch (err) {
       console.log(err)
@@ -66,9 +66,13 @@ export class PaymentService {
   update(id: number, updatePaymentDto: UpdatePaymentDto) {
     return this.paymentRepository.update(id,
       {
-        paymentAmount: updatePaymentDto.amount,
-        paymentMode: updatePaymentDto.mode
-      });
+         Cname: updatePaymentDto.Cname,
+        cardNo: updatePaymentDto.cardNo,
+        cvv: updatePaymentDto.cvv
+      } ).then( ( data ) => {
+        if ( !data ) throw new NotFoundException();
+        return
+      })
   }
 
   remove(id: number) {

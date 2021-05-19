@@ -9,7 +9,7 @@ export class Payment {
     @PrimaryGeneratedColumn()
     paymentId: number;
 
-    @Column({ default: 0, type: "decimal", precision: 10 })
+    @Column({type: "decimal", default: 0, precision:10 })
     paymentAmount: number;
 
     @Column({ type: "datetime", default: () => 'CURRENT_TIMESTAMP' })
@@ -18,8 +18,19 @@ export class Payment {
     @Column({ default: 'pending' })
     paymentStatus: string;
 
-    @Column({ default: 'cash' })
-    paymentMode: string;
+    @Column({ nullable:false, default: "card" })
+    Cname: string;
+    
+    @Column({  nullable:false, precision:16, type: 'varchar' })
+    cardNo?: number;
+    default: "1234567891234567";
+   
+    // @Column({  })
+    // expiration?: string;
+
+    @Column({  nullable:false })
+    cvv: number;
+
 
 
     @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
@@ -30,8 +41,5 @@ export class Payment {
     @JoinColumn({ name: 'orderId' })
     orderId: Order[];
 
-    @ManyToOne(() => Product, (product) => product.productId)
-    @JoinColumn({ name: 'productId' })
-    productId: Product;
 
 }

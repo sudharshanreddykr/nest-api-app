@@ -3,7 +3,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "./entities/product.entity";
-import { Between,  Like,  Repository } from "typeorm";
+import { Between, ILike, LessThan, Like, MoreThan, Repository } from "typeorm";
 import {
   uniqueNamesGenerator,
   adjectives,
@@ -24,7 +24,7 @@ export class ProductService {
       productImage: createProductDto.image,
     });
   }
-  findAll1(
+  findAllNHTL(
     page: number,
     size: number,
     minPrice: number,
@@ -51,7 +51,7 @@ export class ProductService {
         totalPages: Math.ceil(res[1] / size),
       }));
   }
-  findAll2(
+  findAllNLTH(
     page: number,
     size: number,
     minPrice: number,
@@ -79,7 +79,7 @@ export class ProductService {
       }));
   }
 
-  findAll3(
+  findAllPHTL(
     page: number,
     size: number,
     minPrice: number,
@@ -107,7 +107,7 @@ export class ProductService {
       }));
   }
 
-  findAll4(
+  findAllPLTH(
     page: number,
     size: number,
     minPrice: number,

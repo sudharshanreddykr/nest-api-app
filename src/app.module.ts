@@ -19,6 +19,7 @@ import { OrderDetailsModule } from './order-details/order-details.module';
     OrderModule,
     PaymentModule,
     OrderDetailsModule,
+    
 
   ],
   controllers: [

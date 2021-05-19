@@ -20,7 +20,7 @@ export class UserEntity {
   @Column({ nullable: false })
   userName: string;
 
-  @Column({ nullable: false, unique: true })
+  @Column({ nullable: false, unique: false })
   userEmail: string;
 
   @Column({ nullable: false })
@@ -29,6 +29,10 @@ export class UserEntity {
   @Column({ type: 'datetime' })
   createdAt: Date;
 
+  @Column( { nullable: true } )
+  profileImage: string;
+  // @Column( { nullable: true } )
+  // Resume: any;
   // hooks : tasks to be executed
   // this gets executed before every insert operation
   @BeforeInsert()
