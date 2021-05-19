@@ -12,7 +12,7 @@ import {
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
-import { ApiTags, ApiNotFoundResponse, ApiOkResponse } from "@nestjs/swagger";
+import { ApiTags} from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/jwt.guard";
 
 @ApiTags("Product")
