@@ -4,35 +4,30 @@ import {
   Column,
   BeforeInsert,
   OneToMany,
-  JoinColumn,
-} from 'typeorm';
-import * as bcrypt from 'bcrypt';
-import { Address } from 'src/address/entities/address.entity';
-import { Order } from 'src/order/entities/order.entity';
-import { Payment } from 'src/payment/entities/payment.entity';
-import { OrderDetail } from 'src/order-details/entities/order-detail.entity';
+} from "typeorm";
+import * as bcrypt from "bcrypt";
+import { Address } from "src/address/entities/address.entity";
+import { Order } from "src/order/entities/order.entity";
+import { OrderDetail } from "src/order-details/entities/order-detail.entity";
+import { Payment } from "src/payment/entities/payment.entity";
 
-@Entity({ name: 'user' })
+@Entity({ name: "user" })
 export class UserEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   userId: string;
 
   @Column({ nullable: false })
   userName: string;
 
-  @Column({ nullable: false, unique: false })
+  @Column({ nullable: false })
   userEmail: string;
 
   @Column({ nullable: false })
   userPassword: string; // plain text password
 
-  @Column({ type: 'datetime' })
+  @Column({ type: "datetime" })
   createdAt: Date;
 
-  @Column( { nullable: true } )
-  profileImage: string;
-  // @Column( { nullable: true } )
-  // Resume: any;
   // hooks : tasks to be executed
   // this gets executed before every insert operation
   @BeforeInsert()
@@ -42,16 +37,14 @@ export class UserEntity {
 
   // one user will have many addressess
   @OneToMany(() => Address, (address) => address.userId)
-  @JoinColumn({ name: "address" })
   address: Address[];
 
-  @OneToMany(() => Order, (order) => order.orderId)
-  order: Order[];
+  @OneToMany(() => Order, (order) => order.userId)
+  orderId: Order[];
 
-  @OneToMany(() => Payment, (payment) => payment.paymentId)
-  paymentId: Payment[]
+  @OneToMany(() => OrderDetail, (orderDetail) => orderDetail.userId)
+  orderDetailId: OrderDetail[];
 
-  @OneToMany(() => OrderDetail, (orderDetail) => orderDetail.orderId)
-  orderDetailId: OrderDetail[]
-
+  @OneToMany(() => Payment, (payment) => payment.userId)
+  paymentId: Payment[];
 }

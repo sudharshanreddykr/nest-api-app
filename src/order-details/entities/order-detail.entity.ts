@@ -1,39 +1,42 @@
-import { type } from 'node:os';
-import { UserEntity } from 'src/auth/entities/user.entity';
-import { Order } from 'src/order/entities/order.entity';
-import { Product } from 'src/product/entities/product.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToMany, ManyToOne } from "typeorm";
+import { Address } from "src/address/entities/address.entity";
+import { UserEntity } from "src/auth/entities/user.entity";
+import { Order } from "src/order/entities/order.entity";
+import { Product } from "src/product/entities/product.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
-@Entity({ name: 'orderdetails' })
+@Entity({ name: "orderdetails" })
 export class OrderDetail {
-    @PrimaryGeneratedColumn()
-    orderDetailsId: number;
+  @PrimaryGeneratedColumn()
+  orderDetailId: number;
 
-    @Column({ nullable: false })
-    quantity: number;
+  @Column({ type: "decimal", precision: 10 })
+  orderAmount: number;
 
-    @Column({ type: "datetime", default: () => 'CURRENT_TIMESTAMP' })
-    orderDate: Date;
+  @Column({ type: "integer" })
+  orderQty: number;
 
-    // @Column({ type: 'datetime' })
-    // orderShippingDate: Date;
+  // @Column({type:'integer',default:0})
+  // orderId:number;
 
-    @Column({ default: 10, type: 'decimal', precision: 2 })
-    totalAmount: number;
+  @ManyToOne( () => Order, ( order ) => order.orderId )
+  @JoinColumn( { name: "orderId" } )
+  orderId: Order;
 
-    @Column({ default: 'pending' })
-    orderStatus: string;
+  @ManyToOne(() => Product, (product) => product.productId)
+  @JoinColumn({ name: "productId" })
+  productId: Product;
 
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
+  @JoinColumn({ name: "userId" })
+  userId: UserEntity;
 
-    @ManyToOne(() => UserEntity, (user) => user.userId)
-    @JoinColumn({ name: "userId" })
-    userId: UserEntity;
-
-    @ManyToOne(() => Order, (order) => order.orderId)
-    @JoinColumn({ name: "orderId" })
-    orderId: Order;
-
-    @ManyToOne(() => Product, (product) => product.productId)
-    @JoinColumn({ name: "productId" })
-    productId: Product;
+  @OneToMany(() => Address, (address) => address.orderDetailId)
+  address: Address[];
 }

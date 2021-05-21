@@ -23,4 +23,16 @@ export class CreateAddressDto {
 
   @ApiProperty()
   userId: number;
+
+    @ApiProperty()
+  productId: number;
+
+  @ApiProperty()
+  orderId: number;
+
+  @ApiProperty()
+  orderDetailId: number;
+
+  @ApiProperty()
+  paymentId: number;
 }

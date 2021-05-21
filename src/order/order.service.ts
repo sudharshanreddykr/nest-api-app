@@ -32,7 +32,13 @@ export class OrderService {
         orderShippingDate: OSDate,
         orderQty: qty,
         userId: user,
-        productId: product
+        _productId: product,
+        get productId() {
+          return this._productId;
+        },
+        set productId(value) {
+          this._productId = value;
+        },
       });
     } catch (err) {
       console.log(err);
@@ -42,7 +48,7 @@ export class OrderService {
   async findAll(userId: string,) {
     try {
       const user = await this.userService.findById(userId);
-      return this.orderRepository.find({ where: { userId: user }, relations: ["productId"], });
+      return this.orderRepository.find({ where: { userId: user } ,  relations: ["productId"],});
     } catch (err) {
       console.log(err)
     }
@@ -57,6 +63,13 @@ export class OrderService {
       }).catch(err => console.log(err))
   }
 
+  async findbyId(id:string){
+    return this.orderRepository.find({
+      where:{user:id},
+      relations: ["userId", "addressId"]
+
+    });
+  }
 
   async update(id: number, updateOrderDto: UpdateOrderDto) {
     try {
