@@ -19,7 +19,6 @@ export class UserEntity {
   @Column({ nullable: false })
   userName: string;
 
-
   @Column({ nullable: false })
   userEmail: string;
 
@@ -28,6 +27,8 @@ export class UserEntity {
 
   @Column({ type: "datetime" })
   createdAt: Date;
+    @Column({ nullable: true })
+  profileImage: string;
 
   // hooks : tasks to be executed
   // this gets executed before every insert operation

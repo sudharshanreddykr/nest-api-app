@@ -1,52 +1,46 @@
-import { Product } from "./../../product/entities/product.entity";
-import { UserEntity } from "src/auth/entities/user.entity";
-import { OrderDetail } from "src/order-details/entities/order-detail.entity";
-import { Payment } from "src/payment/entities/payment.entity";
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { Address } from "src/address/entities/address.entity";
+import { type } from 'node:os';
+import { UserEntity } from 'src/auth/entities/user.entity';
+import { OrderDetail } from 'src/order-details/entities/order-detail.entity';
+import { Payment } from 'src/payment/entities/payment.entity';
+import { Product } from 'src/product/entities/product.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn, OneToMany } from "typeorm";
 
-@Entity({ name: "order" })
+@Entity({ name: 'orders' })
 export class Order {
-  @PrimaryGeneratedColumn({ type: "integer" })
-  orderId: number;
+    @PrimaryGeneratedColumn()
+    orderId: number;
 
-  @Column({ type: "decimal", precision: 10 })
-  orderAmount: number;
+    @Column({ nullable: false })
+    orderAmount: number;
 
-  @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
-  orderDate: Date;
+    @Column({ nullable: false })
+    orderQty: number;
 
-  @Column({ type: "date", nullable: true })
-  shippingDate: string;
+    @Column({ type: "datetime", default: () => 'CURRENT_TIMESTAMP' })
+    orderDate: Date;
 
-  @Column({ default: "pending" })
-  orderStatus: string;
-  @Column({ type: "integer" })
-  orderQty: number;
+    @Column({ type: 'datetime', nullable: false })
+    orderShippingDate: Date;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)
-  @JoinColumn({ name: "userId" })
-  userId: UserEntity;
+    @Column({ default: 'pending' })
+    orderStatus: string;
 
-  @ManyToOne(() => Product, (product) => product.productId)
-  @JoinColumn({ name: "productId" })
-  //@JoinTable()
-  productId: Product;
+    @ManyToOne(() => UserEntity, (user) => user.userId)
+    @JoinColumn({ name: 'userId' })
+    userId: UserEntity;
 
-  @OneToMany(() => OrderDetail, (orderDetail) => orderDetail.orderId)
-  orderDetailId: OrderDetail[];
+    @ManyToOne(() => Product, (product) => product.productId)
+    @JoinColumn({ name: 'productId' })
+    productId: Product[];
 
-  @OneToMany(() => Payment, (payment) => payment.orderId)
-  paymentId: Payment[];
+    @OneToMany(() => OrderDetail, (orderDetails) => orderDetails.orderId)
+    @JoinColumn({ name: 'orderDetailsId' })
+    orderDetailsId: OrderDetail;
 
-  @OneToMany(() => Address, (address) => address.orderId)
-  address: Address[];
+
+    @OneToMany(() => Payment, (payment) => payment.paymentId)
+    @JoinColumn({ name: 'payment' })
+    paymentId: Payment[];
+
+
 }

@@ -1,7 +1,10 @@
 import { HttpException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { from } from "rxjs";
+import { switchMap } from "rxjs/operators";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "../dto/create-user.dto";
+import { UpdateUserDto } from "../dto/update-user.dto";
 import { UserEntity } from "../entities/user.entity";
 @Injectable()
 export class UserService {
@@ -30,8 +33,13 @@ export class UserService {
       createdAt: new Date().toISOString(),
       userEmail: email,
       userPassword: password,
-      userName: name,
+      userName: name
     });
     return this.userRepo.save(user);
   }
+   updateOne(id: string, user: UpdateUserDto) {
+        return from(this.userRepo.update(id, user)).pipe(
+            switchMap(() => this.findById(id))
+        );
+    }
 }

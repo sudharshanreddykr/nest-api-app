@@ -19,67 +19,78 @@ import {
   ApiBadRequestResponse,
   ApiOkResponse,
 } from "@nestjs/swagger";
+import { diskStorage } from "multer";
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { LoginDto } from "./dto/login.dto";
+import { UserEntity } from "./entities/user.entity";
 import { JwtAuthGuard } from "./jwt.guard";
 import { UserService } from "./user/user.service";
+import { v4 as uuidv4 } from "uuid";
+import { map, tap } from "rxjs/operators";
 
-@ApiTags("Authentication")
-@Controller("auth")
+@ApiTags( "Authentication" )
+@Controller( "auth" )
 export class AuthController {
-  constructor(
+  constructor (
     private authService: AuthService,
     private userService: UserService
-  ) {}
+  ) { }
 
-  @Post("login")
-  @HttpCode(200)
-  @ApiOkResponse({ description: "Login Successful" })
-  @ApiBadRequestResponse({
+  @Post( "login" )
+  @HttpCode( 200 )
+  @ApiOkResponse( { description: "Login Successful" } )
+  @ApiBadRequestResponse( {
     description: "User does not exists or invalid login details",
-  })
-  login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  } )
+  login ( @Body() loginDto: LoginDto ) {
+    return this.authService.login( loginDto );
   }
 
-  @Post("register")
-  @ApiCreatedResponse({ description: "New user account created" })
-  @ApiBadRequestResponse({ description: "User already exists or server error" })
-  register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.registerUser(createUserDto);
+  @Post( "register" )
+  @ApiCreatedResponse( { description: "New user account created" } )
+  @ApiBadRequestResponse( { description: "User already exists or server error" } )
+  register ( @Body() createUserDto: CreateUserDto ) {
+    return this.authService.registerUser( createUserDto );
   }
-
   @UseGuards(JwtAuthGuard)
-  @Get("profile")
-  getProfile(@Request() req: any) {
-    // user : userId, email : from JwtStrategy
-    return this.userService.findById(req.user.userId);
-  }
-  // @Post("upload")
-  // @UseInterceptors(FileInterceptor("file", { dest: "./images" }))
-  // uploadFile(@UploadedFile() files: any): any {
-  //   //return "success";
-  //   console.log(files);
-  // }
-  @Post("file")
-  @UseInterceptors(FilesInterceptor("image"))
-  uploadFile(@UploadedFiles() file) {
-    console.log(file);
-  }
-  @Post("upload")
-  @UseInterceptors(FileInterceptor("photo", { dest: "./uploads" }))
-  uploadSingle(@UploadedFile() file) {
-    console.log(file);
-  }
+    @Get("profile")
+    getProfile(@Request() req: any) {
+        // user : userId, email : from JwtStrategy
+        return this.userService.findById(req.user.userId);
+    }
 
-  @Post("uploads")
-  @UseInterceptors(FilesInterceptor("photos[]", 10))
-  uploadMultiple(@UploadedFiles() files) {
-    console.log(files);
-  }
-  @Get(":imgpath")
-  seeUploadedFile(@Param("imgpath") image, @Res() res) {
-    return res.sendFile(image, { root: "./uploads" });
-  }
+    @UseGuards(JwtAuthGuard)
+    @Post("upload")
+    @UseInterceptors(
+        FileInterceptor("file", {
+            storage: diskStorage({
+                destination: "./upload/profileimage",
+                filename: (req: any, file: any, callback: any) => {
+                    return callback(null, `${uuidv4()}${file.originalname}`);
+                },
+            }),
+        })
+    )
+    uploadFile(@UploadedFile() file: Express.Multer.File, @Request() req) {
+        const user: UserEntity = req.user;
+
+        console.log(file);
+
+        return this.userService
+            .updateOne(user.userId, { profileImage: file.filename })
+            .pipe(
+                tap((user: UserEntity) => console.log(user)),
+                map((user: UserEntity) => ({ profileImage: user.profileImage }))
+            );
+    }
+
+    @Get("profileImage/:fileId")
+    async serveAvatar(@Param("fileId") fileId, @Res() res): Promise<any> {
+        return res.sendFile(fileId, { root: "upload/profileImage" });
+    }
 }
+
+
+
+

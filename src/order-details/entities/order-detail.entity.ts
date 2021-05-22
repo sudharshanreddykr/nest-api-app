@@ -25,8 +25,8 @@ export class OrderDetail {
   // @Column({type:'integer',default:0})
   // orderId:number;
 
-  @ManyToOne(() => Order, (order) => order.orderId)
-  @JoinColumn({ name: "orderId" })
+  @ManyToOne( () => Order, ( order ) => order.orderId )
+  @JoinColumn( { name: "orderId" } )
   orderId: Order;
 
   @ManyToOne(() => Product, (product) => product.productId)

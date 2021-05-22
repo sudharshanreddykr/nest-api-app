@@ -13,7 +13,7 @@ import { AppService } from './app.service';
 @Controller()
 export class AppController {
   // create an object of appservice class & inject in the appcontroller class
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
   // GET : /?name=test&age=12
   @Get()
@@ -27,6 +27,8 @@ export class AppController {
     console.log(data);
     return 'post method function';
   }
+
+
   // PUT : /100
   @Put(':id')
   putTest(@Param('id') id: string, @Body() data: any) {

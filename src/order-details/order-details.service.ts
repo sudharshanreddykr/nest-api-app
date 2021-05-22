@@ -34,7 +34,14 @@ export class OrderDetailsService {
       orderAmount: amount,
       orderQty: qty,
       userId: user,
-      orderId: order,
+      
+      _orderId: order,
+      get orderId () {
+        return this._orderId;
+      },
+      set orderId ( value ) {
+        this._orderId = value;
+      },
       productId: product,
     });
   }

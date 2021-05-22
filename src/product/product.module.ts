@@ -3,10 +3,15 @@ import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
+import { Order } from 'src/order/entities/order.entity';
+import { OrderService } from 'src/order/order.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product])],
+  // register the modules : features
+  imports: [TypeOrmModule.forFeature([Product, Order])],
+  // register the controller
   controllers: [ProductController],
-  providers: [ProductService],
+  // register the services
+  providers: [ProductService, OrderService],
 })
-export class ProductModule {}
+export class ProductModule { }
