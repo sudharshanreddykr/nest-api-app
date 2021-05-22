@@ -30,7 +30,7 @@ export class UserService {
       createdAt: new Date().toISOString(),
       userEmail: email,
       userPassword: password,
-      userName: name
+      userName: name,
     });
     return this.userRepo.save(user);
   }

@@ -6,8 +6,8 @@ import { ProductModule } from './product/product.module';
 import { AuthModule } from './auth/auth.module';
 import { AddressModule } from './address/address.module';
 import { OrderModule } from './order/order.module';
-import { PaymentModule } from './payment/payment.module';
 import { OrderDetailsModule } from './order-details/order-details.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -17,10 +17,8 @@ import { OrderDetailsModule } from './order-details/order-details.module';
     AuthModule,
     AddressModule,
     OrderModule,
-    PaymentModule,
     OrderDetailsModule,
-    
-
+    PaymentModule,
   ],
   controllers: [
     // register the controller
@@ -31,4 +29,4 @@ import { OrderDetailsModule } from './order-details/order-details.module';
     AppService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

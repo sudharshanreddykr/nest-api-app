@@ -1,7 +1,7 @@
 import { Address } from "src/address/entities/address.entity";
 import { UserEntity } from "src/auth/entities/user.entity";
-import { Order } from "src/order/entities/order.entity";
 
+import { Order } from "src/order/entities/order.entity";
 import { Product } from "src/product/entities/product.entity";
 import {
   Column,
@@ -39,8 +39,8 @@ export class Payment {
   @JoinColumn({ name: "productId" })
   productId: Product;
 
-  @ManyToOne( () => Order, ( order ) => order.orderId )
-  @JoinColumn( { name: "orderId" } )
+  @ManyToOne(() => Order, (order) => order.orderId)
+  @JoinColumn({ name: "orderId" })
   orderId: Order;
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.userId)

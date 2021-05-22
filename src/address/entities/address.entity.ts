@@ -1,16 +1,16 @@
-import { Order } from 'src/order/entities/order.entity';
-import { JoinColumn } from 'typeorm';
-import { UserEntity } from 'src/auth/entities/user.entity';
+import { OrderDetail } from "./../../order-details/entities/order-detail.entity";
+import { UserEntity } from "src/auth/entities/user.entity";
+import { Order } from "src/order/entities/order.entity";
+import { Product } from "src/product/entities/product.entity";
 import {
   BeforeInsert,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Product } from 'src/product/entities/product.entity';
-import { Payment } from 'src/payment/entities/payment.entity';
-import {OrderDetail} from "src/order-details/entities/order-detail.entity"
+} from "typeorm";
+import { Payment } from "src/payment/entities/payment.entity";
 
 @Entity()
 export class Address {
@@ -27,19 +27,22 @@ export class Address {
   city: string;
 
   @Column()
-  state: string;
+  stateName: string;
 
   @Column({ precision: 6 })
-  pincode?: number;
+  pincode: number;
+  @Column({ precision: 15, type: "decimal" })
+  mobile: number;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: "datetime" })
   createdAt: string;
 
-  //many addresses will be for one userentity
+  // many addresses will be for one userentity
   @ManyToOne(() => UserEntity, (user) => user.userId)
+  @JoinColumn({ name: "userId" })
   userId: UserEntity;
 
-   @ManyToOne(() => Order, (order) => order.orderId)
+  @ManyToOne(() => Order, (order) => order.orderId)
   @JoinColumn({ name: "orderId" })
   orderId: Order;
 
@@ -47,7 +50,7 @@ export class Address {
   @JoinColumn({ name: "productId" })
   productId: Product;
 
-  @ManyToOne(() => OrderDetail, (OrderDetail) => OrderDetail.orderDetailId)
+  @ManyToOne(() => OrderDetail, (orderDetail) => orderDetail.orderDetailId)
   @JoinColumn({ name: "orderDetailId" })
   orderDetailId: OrderDetail;
 

@@ -12,4 +12,5 @@ export class CreateProductDto {
 
   @ApiProperty({ required: false })
   salePrice?: number;
+
 }

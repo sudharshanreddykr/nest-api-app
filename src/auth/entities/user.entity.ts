@@ -19,6 +19,7 @@ export class UserEntity {
   @Column({ nullable: false })
   userName: string;
 
+
   @Column({ nullable: false })
   userEmail: string;
 
